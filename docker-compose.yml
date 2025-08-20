@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: caplib-db
+    environment:
+      POSTGRES_DB: caplib
+      POSTGRES_USER: cap
+      POSTGRES_PASSWORD: cap
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"   # opzionale: solo se vuoi accedere dalla tua macchina
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "cap"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    container_name: caplib-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Mappatura delle impostazioni CAP via env vars:
+      CDS_REQUIRES_DB_KIND: postgres
+      CDS_REQUIRES_DB_IMPL: "@cap-js/postgres"
+      CDS_REQUIRES_DB_CREDENTIALS_HOST: db
+      CDS_REQUIRES_DB_CREDENTIALS_PORT: "5432"
+      CDS_REQUIRES_DB_CREDENTIALS_DATABASE: caplib
+      CDS_REQUIRES_DB_CREDENTIALS_USER: cap
+      CDS_REQUIRES_DB_CREDENTIALS_PASSWORD: cap
+      NODE_ENV: production
+    ports:
+      - "4004:4004"
+    # (facoltativo) se vuoi vedere i log colorati in compose:
+    tty: true
+
+volumes:
+  pgdata:

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cds watch",
     "start:pg": "cds watch --profile pg",
-    "deploy:pg": "cds deploy --profile pg"
+    "deploy:pg": "cds deploy --profile pg",
+    "start:pg:prod": "cds-serve --profile pg"
   },
   "engines": {
     "node": ">=20"
