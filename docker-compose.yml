@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16-alpine
@@ -11,9 +9,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"   # opzionale: solo se vuoi accedere dalla tua macchina
+      - "5432:5432"         # opzionale
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "cap"]
+      # prima collegava implicitamente al DB "cap"; ora puntiamo a caplib
+      test: ["CMD", "pg_isready", "-U", "cap", "-d", "caplib"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -25,7 +24,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      # Mappatura delle impostazioni CAP via env vars:
+      # ---- DB (sovrascrivono il profilo [pg] del package.json) ----
       CDS_REQUIRES_DB_KIND: postgres
       CDS_REQUIRES_DB_IMPL: "@cap-js/postgres"
       CDS_REQUIRES_DB_CREDENTIALS_HOST: db
@@ -33,11 +32,16 @@ services:
       CDS_REQUIRES_DB_CREDENTIALS_DATABASE: caplib
       CDS_REQUIRES_DB_CREDENTIALS_USER: cap
       CDS_REQUIRES_DB_CREDENTIALS_PASSWORD: cap
-      NODE_ENV: production
+
+      # ---- Auth: evita xssec in container dev ----
+      # Opzione A (consigliata): fissa esplicitamente "mock"
+      CDS_REQUIRES_AUTH_KIND: mocked
+
+      # Opzione B: in alternativa potresti rimuovere NODE_ENV=production
+      # (se lo avevi) per far rientrare CAP in modalità dev
+
     ports:
       - "4004:4004"
-    # (facoltativo) se vuoi vedere i log colorati in compose:
-    tty: true
 
 volumes:
   pgdata:
