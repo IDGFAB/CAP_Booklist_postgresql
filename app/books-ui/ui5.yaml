@@ -1,0 +1,13 @@
+specVersion: "3.2"
+type: application
+metadata:
+  name: books.ui
+
+resources:
+  configuration:
+    paths:
+      webapp: webapp
+
+customConfiguration:
+  cds-plugin-ui5:
+    mountPath: /books-ui

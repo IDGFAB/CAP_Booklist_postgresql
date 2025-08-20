@@ -1,0 +1,39 @@
+<mvc:View
+  controllerName="books.ui.controller.Main"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m">
+
+  <App>
+    <Page title="Libreria">
+      <content>
+        <Toolbar>
+          <Title text="Books" level="H3"/>
+          <ToolbarSpacer/>
+          <Button text="Aggiungi" press=".addNewBook"/>
+        </Toolbar>
+
+        <Table id="tbl"
+               growing="true"
+               items="{Libri>/}"
+               noDataText="Nessun libro trovato">
+          <columns>
+            <Column><Text text="Titolo"/></Column>
+            <Column><Text text="Autore"/></Column>
+            <Column hAlign="End"><Text text="Scorte"/></Column>
+            <Column hAlign="End"><Text text="Prezzo"/></Column>
+          </columns>
+          <items>
+            <ColumnListItem>
+              <cells>
+                <Text text="{Libri>title}"/>
+                <Text text="{Libri>author}"/>
+                <ObjectNumber number="{Libri>stock}" unit="pz"/>
+                <ObjectNumber number="{Libri>price}" unit="€"/>
+              </cells>
+            </ColumnListItem>
+          </items>
+        </Table>
+      </content>
+    </Page>
+  </App>
+</mvc:View>

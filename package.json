@@ -1,0 +1,47 @@
+{
+  "name": "cap-booklib",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "cds watch",
+    "start:pg": "cds watch --profile pg",
+    "deploy:pg": "cds deploy --profile pg"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@cap-js/postgres": "^2.0.0",
+    "@sap/cds": "^9.2.1",
+    "axios": "^1.11.0"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9.0.0",
+    "@ui5/cli": "^3.11.10",
+    "cds-plugin-ui5": "^0.13.4"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "database": ":memory:"
+        }
+      },
+      "[pg]": {
+        "db": {
+          "kind": "postgres",
+          "impl": "@cap-js/postgres",
+          "credentials": {
+            "host": "localhost",
+            "port": 5432,
+            "database": "caplib",
+            "user": "cap",
+            "password": "cap"
+          }
+        }
+      }
+    }
+  }
+}
